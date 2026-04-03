@@ -10,6 +10,7 @@
 import type { Element } from "@emdash-cms/blocks";
 import { Kysely, sql, type Dialect } from "kysely";
 
+import type { AIProviderRegistry } from "./ai/types.js";
 import { validateRev } from "./api/rev.js";
 import type {
 	EmDashConfig,
@@ -83,6 +84,10 @@ function isValidMetadataContribution(c: unknown): c is PageMetadataContribution 
 	}
 }
 
+import { createAnthropicProvider } from "./ai/providers/anthropic.js";
+import { createOllamaProvider } from "./ai/providers/ollama.js";
+import { createOpenAIProvider } from "./ai/providers/openai.js";
+import { DefaultAIProviderRegistry } from "./ai/registry.js";
 import { loadBundleFromR2 } from "./api/handlers/marketplace.js";
 import { runSystemCleanup } from "./cleanup.js";
 import {
@@ -275,6 +280,13 @@ export class EmDashRuntime {
 	readonly mediaProviderEntries: MediaProviderEntry[];
 	readonly cronExecutor: CronExecutor | null;
 	readonly email: EmailPipeline | null;
+
+	/**
+	 * AI provider registry for BYOK multi-provider AI.
+	 * Initialized during create() with registered provider factories.
+	 * Plugins access this via the runtime to generate text, structured output, etc.
+	 */
+	ai: AIProviderRegistry | null = null;
 
 	private cronScheduler: CronScheduler | null;
 	private enabledPlugins: Set<string>;
@@ -778,7 +790,7 @@ export class EmDashRuntime {
 			// Non-fatal — CMS works without cron
 		}
 
-		return new EmDashRuntime(
+		const runtime = new EmDashRuntime(
 			db,
 			storage,
 			deps.plugins,
@@ -798,6 +810,21 @@ export class EmDashRuntime {
 			deps,
 			pipelineRef,
 		);
+
+		// ── AI Provider Registry ────────────────────────────────────────
+		// Register built-in provider factories. Provider instances are created
+		// lazily when admin configures API keys via the settings UI.
+		try {
+			const aiRegistry = new DefaultAIProviderRegistry();
+			aiRegistry.register("anthropic", createAnthropicProvider);
+			aiRegistry.register("openai", createOpenAIProvider);
+			aiRegistry.register("ollama", createOllamaProvider);
+			runtime.ai = aiRegistry;
+		} catch (error) {
+			console.warn("[ai] Failed to initialize AI provider registry:", error);
+		}
+
+		return runtime;
 	}
 
 	/**

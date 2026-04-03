@@ -178,9 +178,31 @@ export type {
 } from "./storage/types.js";
 export { EmDashStorageError } from "./storage/types.js";
 
+// AI providers
+export {
+	DefaultAIProviderRegistry,
+	createAnthropicProvider,
+	createOpenAIProvider,
+	createOllamaProvider,
+	encryptApiKey,
+	decryptApiKey,
+	maskApiKey,
+} from "./ai/index.js";
+export type {
+	AIProvider,
+	AIProviderConfig,
+	AIProviderFactory,
+	AIProviderRegistry,
+	AIModel,
+	GenerateTextParams,
+	GenerateStructuredParams,
+	GenerationResult,
+} from "./ai/index.js";
+
 // Plugin system
 export {
 	definePlugin,
+	defineAgent,
 	adaptSandboxEntry,
 	isStandardPluginDefinition,
 	pluginManifestSchema,
@@ -195,6 +217,9 @@ export {
 	createNoopSandboxRunner,
 } from "./plugins/index.js";
 export type {
+	AgentDefinition,
+	AgentRunContext,
+	AgentChatContext,
 	PluginDefinition,
 	ResolvedPlugin,
 	PluginCapability,

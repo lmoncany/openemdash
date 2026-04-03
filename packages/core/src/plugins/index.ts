@@ -11,6 +11,10 @@
 // definePlugin
 export { definePlugin } from "./define-plugin.js";
 
+// defineAgent
+export { defineAgent } from "./define-agent.js";
+export type { AgentDefinition, AgentRunContext, AgentChatContext } from "./define-agent.js";
+
 // Standard plugin adapter
 export { adaptSandboxEntry } from "./adapt-sandbox-entry.js";
 

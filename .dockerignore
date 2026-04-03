@@ -1,0 +1,42 @@
+# Dependencies
+node_modules
+
+# Build output (rebuilt in container)
+dist/
+.astro/
+
+# Database files
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+
+# Uploads (mounted as volume)
+uploads/
+
+# Git
+.git
+.gitignore
+
+# IDE
+.idea/
+.vscode/
+
+# macOS
+.DS_Store
+
+# CI / testing
+playwright-report/
+test-results/
+playwright/.cache/
+__screenshots__/
+debug-*.png
+
+# Cloudflare (not needed for self-hosted)
+.wrangler
+.dev.vars
+
+# gstack / AI artifacts
+.gstack/
+*-review.md
+.chainlink/

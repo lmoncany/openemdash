@@ -1,0 +1,44 @@
+# OpenEmDash — docker compose up and go
+#
+# Usage:
+#   docker compose up --build
+#   Open http://localhost:4321/_emdash/setup to initialize
+#
+# Includes:
+#   - app: OpenEmDash CMS (Node.js + SQLite)
+#   - minio: S3-compatible object storage (optional, for production-like media)
+#
+# By default, media is stored on the local filesystem (./uploads volume).
+# To use Minio instead, configure S3 storage in your live.config.ts.
+
+services:
+  app:
+    build: .
+    ports:
+      - "4321:4321"
+    volumes:
+      - app-data:/app/demos/simple/data
+      - uploads:/app/demos/simple/uploads
+    environment:
+      - HOST=0.0.0.0
+      - PORT=4321
+      - NODE_ENV=production
+    restart: unless-stopped
+
+  minio:
+    image: minio/minio:latest
+    command: server /data --console-address ":9001"
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio-data:/data
+    environment:
+      - MINIO_ROOT_USER=emdash
+      - MINIO_ROOT_PASSWORD=emdash-dev-secret
+    restart: unless-stopped
+
+volumes:
+  app-data:
+  uploads:
+  minio-data:

@@ -1,0 +1,21 @@
+{
+	"name": "@emdash-cms/plugin-ai-writer",
+	"version": "0.1.0",
+	"description": "Toto — AI content writer agent for OpenEmDash",
+	"type": "module",
+	"main": "src/index.ts",
+	"exports": {
+		".": "./src/index.ts",
+		"./sandbox": "./src/sandbox-entry.ts"
+	},
+	"files": ["src"],
+	"keywords": ["emdash", "cms", "plugin", "ai", "writer", "agent", "toto"],
+	"license": "MIT",
+	"dependencies": {},
+	"peerDependencies": {
+		"emdash": "workspace:*"
+	},
+	"scripts": {
+		"typecheck": "tsgo --noEmit"
+	}
+}

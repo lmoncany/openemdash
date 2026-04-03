@@ -1,6 +1,8 @@
 import node from "@astrojs/node";
 import react from "@astrojs/react";
+import { aiWriterPlugin } from "@emdash-cms/plugin-ai-writer";
 import { auditLogPlugin } from "@emdash-cms/plugin-audit-log";
+import { seoAnalyzerPlugin } from "@emdash-cms/plugin-seo-analyzer";
 import { defineConfig } from "astro/config";
 import emdash, { local } from "emdash/astro";
 import { sqlite } from "emdash/db";
@@ -22,7 +24,7 @@ export default defineConfig({
 				directory: "./uploads",
 				baseUrl: "/_emdash/api/media/file",
 			}),
-			plugins: [auditLogPlugin()],
+			plugins: [auditLogPlugin(), aiWriterPlugin(), seoAnalyzerPlugin()],
 		}),
 	],
 	devToolbar: { enabled: false },

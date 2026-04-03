@@ -1,0 +1,21 @@
+{
+	"name": "@emdash-cms/plugin-seo-analyzer",
+	"version": "0.1.0",
+	"description": "BUBU — AI-powered SEO analyzer agent for OpenEmDash",
+	"type": "module",
+	"main": "src/index.ts",
+	"exports": {
+		".": "./src/index.ts",
+		"./sandbox": "./src/sandbox-entry.ts"
+	},
+	"files": ["src"],
+	"keywords": ["emdash", "cms", "plugin", "ai", "seo", "analyzer", "agent", "bubu"],
+	"license": "MIT",
+	"dependencies": {},
+	"peerDependencies": {
+		"emdash": "workspace:*"
+	},
+	"scripts": {
+		"typecheck": "tsgo --noEmit"
+	}
+}

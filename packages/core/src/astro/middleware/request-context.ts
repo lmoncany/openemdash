@@ -14,6 +14,7 @@ import { defineMiddleware } from "astro:middleware";
 
 import { verifyPreviewToken, parseContentId } from "../../preview/tokens.js";
 import { runWithContext } from "../../request-context.js";
+import { renderCopilot } from "../../visual-editing/copilot.js";
 import { renderToolbar } from "../../visual-editing/toolbar.js";
 
 /**
@@ -100,12 +101,13 @@ export const onRequest = defineMiddleware(async (context, next) => {
 				response.headers.set("Cache-Control", "private, no-store");
 			}
 
-			// Inject toolbar for authenticated editors
+			// Inject toolbar + copilot for authenticated editors
 			if (isEditor) {
-				const toolbarHtml = renderToolbar({
-					editMode,
-					isPreview: !!preview,
-				});
+				const toolbarHtml =
+					renderToolbar({
+						editMode,
+						isPreview: !!preview,
+					}) + renderCopilot();
 				return injectToolbar(response, toolbarHtml);
 			}
 
@@ -113,13 +115,14 @@ export const onRequest = defineMiddleware(async (context, next) => {
 		});
 	}
 
-	// Editor without CMS signals — no ALS needed, but inject toolbar
+	// Editor without CMS signals — no ALS needed, but inject toolbar + copilot
 	if (isEditor) {
 		const response = await next();
-		const toolbarHtml = renderToolbar({
-			editMode: false,
-			isPreview: false,
-		});
+		const toolbarHtml =
+			renderToolbar({
+				editMode: false,
+				isPreview: false,
+			}) + renderCopilot();
 		return injectToolbar(response, toolbarHtml);
 	}
 

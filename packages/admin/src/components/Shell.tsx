@@ -2,6 +2,7 @@ import * as React from "react";
 
 import { useCurrentUser } from "../lib/api/current-user";
 import { AdminCommandPalette } from "./AdminCommandPalette";
+import { CopilotSidebar } from "./CopilotSidebar";
 import { Header } from "./Header";
 import { Sidebar, SidebarNav } from "./Sidebar";
 import { WelcomeModal } from "./WelcomeModal";
@@ -29,6 +30,7 @@ export interface ShellProps {
  */
 export function Shell({ children, manifest }: ShellProps) {
 	const [welcomeModalOpen, setWelcomeModalOpen] = React.useState(false);
+	const [copilotOpen, setCopilotOpen] = React.useState(false);
 
 	const { data: user } = useCurrentUser();
 
@@ -56,9 +58,12 @@ export function Shell({ children, manifest }: ShellProps) {
 
 			{/* Main content area — scrolls independently so sidebar stays full height */}
 			<div className="flex flex-1 flex-col overflow-hidden">
-				<Header />
+				<Header onCopilotToggle={() => setCopilotOpen((o) => !o)} copilotOpen={copilotOpen} />
 				<main className="flex-1 overflow-y-auto p-6">{children}</main>
 			</div>
+
+			{/* AI Copilot sidebar */}
+			<CopilotSidebar open={copilotOpen} onClose={() => setCopilotOpen(false)} />
 
 			{/* Welcome modal for first-time users */}
 			{user && (

@@ -821,6 +821,32 @@ export function injectBuiltinAuthRoutes(injectRoute: InjectRoute): void {
 		entrypoint: resolveRoute("api/auth/signup/complete.ts"),
 	});
 
+	// ── AI routes ──────────────────────────────────────────────────
+	injectRoute({
+		pattern: "/_emdash/api/ai/chat",
+		entrypoint: resolveRoute("api/ai/chat.ts"),
+	});
+
+	injectRoute({
+		pattern: "/_emdash/api/ai/agents",
+		entrypoint: resolveRoute("api/ai/agents.ts"),
+	});
+
+	injectRoute({
+		pattern: "/_emdash/api/ai/runs",
+		entrypoint: resolveRoute("api/ai/runs.ts"),
+	});
+
+	injectRoute({
+		pattern: "/_emdash/api/ai/runs/[id]",
+		entrypoint: resolveRoute("api/ai/runs/[id].ts"),
+	});
+
+	injectRoute({
+		pattern: "/_emdash/api/ai/providers",
+		entrypoint: resolveRoute("api/ai/providers.ts"),
+	});
+
 	// Allowed domains admin routes (only relevant for passkey mode)
 	injectRoute({
 		pattern: "/_emdash/api/admin/allowed-domains",

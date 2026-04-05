@@ -319,6 +319,9 @@ export const onRequest = defineMiddleware(async (context, next) => {
 
 				// Update plugin enabled/disabled status and rebuild hook pipeline
 				setPluginStatus: runtime.setPluginStatus.bind(runtime),
+
+				// AI provider registry
+				ai: runtime.ai,
 			};
 		} catch (error) {
 			console.error("EmDash middleware error:", error);

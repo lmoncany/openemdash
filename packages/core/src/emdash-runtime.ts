@@ -812,13 +812,32 @@ export class EmDashRuntime {
 		);
 
 		// ── AI Provider Registry ────────────────────────────────────────
-		// Register built-in provider factories. Provider instances are created
-		// lazily when admin configures API keys via the settings UI.
+		// Register built-in provider factories and auto-configure any
+		// providers whose API keys are set via environment variables.
 		try {
 			const aiRegistry = new DefaultAIProviderRegistry();
 			aiRegistry.register("anthropic", createAnthropicProvider);
 			aiRegistry.register("openai", createOpenAIProvider);
 			aiRegistry.register("ollama", createOllamaProvider);
+
+			// Auto-configure providers from env vars (BYOK)
+			const anthropicKey =
+				import.meta.env.EMDASH_ANTHROPIC_API_KEY || import.meta.env.ANTHROPIC_API_KEY || "";
+			if (anthropicKey) {
+				aiRegistry.configure({ providerId: "anthropic", apiKey: anthropicKey });
+			}
+
+			const openaiKey =
+				import.meta.env.EMDASH_OPENAI_API_KEY || import.meta.env.OPENAI_API_KEY || "";
+			if (openaiKey) {
+				aiRegistry.configure({ providerId: "openai", apiKey: openaiKey });
+			}
+
+			const ollamaUrl = import.meta.env.EMDASH_OLLAMA_URL || import.meta.env.OLLAMA_URL || "";
+			if (ollamaUrl) {
+				aiRegistry.configure({ providerId: "ollama", baseUrl: ollamaUrl });
+			}
+
 			runtime.ai = aiRegistry;
 		} catch (error) {
 			console.warn("[ai] Failed to initialize AI provider registry:", error);

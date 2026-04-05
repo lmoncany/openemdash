@@ -1,5 +1,5 @@
 import { Button, LinkButton, Popover } from "@cloudflare/kumo";
-import { SignOut, Shield, Gear, ArrowSquareOut } from "@phosphor-icons/react";
+import { SignOut, Shield, Gear, ArrowSquareOut, Robot } from "@phosphor-icons/react";
 import { Link } from "@tanstack/react-router";
 import * as React from "react";
 
@@ -22,11 +22,16 @@ async function handleLogout() {
 	}
 }
 
+export interface HeaderProps {
+	onCopilotToggle?: () => void;
+	copilotOpen?: boolean;
+}
+
 /**
  * Admin header with mobile menu toggle and user actions.
  * Uses useSidebar() hook from kumo Sidebar.Provider context.
  */
-export function Header() {
+export function Header({ onCopilotToggle, copilotOpen }: HeaderProps = {}) {
 	const [userMenuOpen, setUserMenuOpen] = React.useState(false);
 
 	const { data: user } = useCurrentUser();
@@ -48,6 +53,20 @@ export function Header() {
 					<ArrowSquareOut className="h-4 w-4 mr-1" />
 					View Site
 				</LinkButton>
+
+				{/* AI Copilot toggle */}
+				{onCopilotToggle && (
+					<Button
+						variant={copilotOpen ? "outline" : "ghost"}
+						size="sm"
+						onClick={onCopilotToggle}
+						aria-label="Toggle AI Copilot"
+						className="gap-1.5"
+					>
+						<Robot className="h-4 w-4" />
+						<span className="hidden sm:inline">Copilot</span>
+					</Button>
+				)}
 
 				{/* Theme toggle */}
 				<ThemeToggle />
